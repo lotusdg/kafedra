@@ -2,13 +2,19 @@ const router = require('express').Router();
 const userService = new (require('./userService.js'))();
 
 router.get('/', (req,res) => {
-    const users = userService.getAll();
-    res.send(users);
+    const users = userService.getAll().then(
+        ({ rows }) =>  res.send(rows)
+    ).catch(
+        err => console.log(err)
+    );
 });
 
 router.post('/', (req,res) => {
-    userService.create(req.body);
-    res.sendStatus(201);
+    userService.create(req.body).then(
+        () => res.sendStatus(201)
+    ).catch(
+        err => console.log(err)
+    );
 });
 
 router.get('/:id', (req,res) => {
